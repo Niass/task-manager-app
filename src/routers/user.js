@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../models/user');
 const auth = require('../middleware/auth');
 const router = new express.Router();
+const multer = require('multer');
 
 router.post('/users', async (req, res) => {
   const user = new User(req.body);
@@ -24,6 +25,41 @@ router.post('/users/logout', auth, async (req, res) => {
   } catch (e) {
     res.status(500).send();
   }
+});
+
+// const multer = require('multer')
+// const upload = multer({
+//     dest: 'images',
+//     limits: {
+//         fileSize: 1000000
+//     },
+//     fileFilter(req, file, cb) {
+//         if (!file.originalname.match(/\.(doc|docx)$/)) {
+//             return cb(new Error('Please upload a Word document'))
+//         }
+
+//         cb(undefined, true)
+//     }
+// })
+// app.post('/upload', upload.single('upload'), (req, res) => {
+//     res.send()
+// })
+
+const avatar = multer({
+  dest: 'avatars',
+  limits: {
+    fileSize: 1000000
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      return cb(new Error('Please upload an image'));
+    }
+    cb(undefined, true);
+  }
+});
+
+router.post('/users/me/avatar', avatar.single('avatar'), async (req, res) => {
+  res.send();
 });
 
 router.post('/users/logoutAll', auth, async (req, res) => {
