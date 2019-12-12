@@ -9,16 +9,21 @@ const taskSchema = new mongoose.Schema({
   completed: {
     type: Boolean,
     default: false
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   }
 });
-taskSchema.pre('save',async function(next){
+taskSchema.pre('save', async function(next) {
   const task = this;
-  console.log("What is next")
-  if(task.isModified('password')) {
-    task.password = await bcrypt.hash(task.password, 8)
+  console.log('What is next');
+  if (task.isModified('password')) {
+    task.password = await bcrypt.hash(task.password, 8);
   }
-  next()
-})
+  next();
+});
 const Task = mongoose.model('Task', taskSchema);
 
 module.exports = Task;
