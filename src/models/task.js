@@ -25,7 +25,6 @@ taskSchema.pre(
   'save',
   async function(next) {
     const task = this;
-    console.log('What is next');
     if (task.isModified('password')) {
       task.password = await bcrypt.hash(task.password, 8);
     }
